@@ -1,5 +1,49 @@
 <nav class="navbar navbar-dark bg-dark">
+
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Movie Hub</a>
+
+    <a class="navbar-brand" style='color:rgba(25, 135, 84, 1)' href="/">Movie Hub</a>
+    
+    <div class='d-flex'>
+      {% if user.is_authenticated %}
+
+        <li class='d-inline me-2' style='margin-top:1px'>
+          <a class='nav-item' 
+            style="border:none; 
+              background:none; 
+              color:rgba(25, 135, 84, 1);
+              text-decoration: none;" 
+            href='{% url "profile" %}'>
+              {{user.username|capfirst}}'s Hub</a>
+        </li>
+      
+        <form method='post' action='{% url "logout" %}'>
+          {% csrf_token %}
+          <button 
+          type='submit' 
+          class='nav-item' 
+          style="border:none; 
+            background:none; 
+            color:rgba(25, 135, 84, 1);
+            text-decoration: none;">
+            Logout </button>
+
+        </form>
+
+      {% else %}
+
+      <li class='d-inline'>
+        <a class='nav-item' 
+          style="border:none; 
+            background:none; 
+            color:rgba(25, 135, 84, 1);
+            text-decoration: none;" 
+          href='{% url "login" %}'>
+            Login</a>
+      </li>
+      
+      {% endif %}
+    </div>
+
   </div>
 </nav>
