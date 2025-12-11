@@ -1,42 +1,31 @@
-{% if error_message %} 
+{% if error_message %}
 
-  <p>{{error_message}}</p>
+<p>{{error_message}}</p>
 
-{% endif %}
-    
-{% for movie in movies %}
-<div class='col-md'>
-    <a href="{% url 'movie_detail' movie.id %}" 
+{% endif %} {% for movie in movies %}
+<div class="col-md">
+  <div class="card my-2 text-decoration-none" style="width: 18rem">
+    <a href="{% url 'movie_detail' movie.id %}"
       class="text-decoration-none">
-
-        <div 
-          class="card my-2" 
-          style="width: 18rem">
-
-            <img 
-              class="card-img-top" 
-              src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{% else %}https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg{% endif %}" 
-              alt="{{movie.title}}" />
-            <div class="card-body">
-                <h5 class="card-title">{{movie.title}}</h5>
-                <p class="card-text">
-                {{movie.vote_average|floatformat:2}}/10 Voted: {{movie.vote_count}}
-                </p>
-
-            </div>
-        </div>
+      <img
+        class="card-img-top"
+        src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{% else %}https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg{% endif %}"
+        alt="{{movie.title}}"
+      />
+      <div class="card-body text-decoration-none text-black">
+        <h5 class="card-title">{{movie.title}}</h5>
+        <p class="card-text">
+          {{movie.vote_average|floatformat:2}}/10 Voted: {{movie.vote_count}}
+        </p>
+      </div>
     </a>
+  </div>
 </div>
-{% endfor %}
-
-
-{% if has_next %}
-    <div 
-    id="scroll-trigger"
-    hx-get="{% url 'landing_page' %}?catagory={{catagory}}&search={{search_query}}&page={{next_page}}"
-    hx-trigger="revealed"
-    hx-swap="beforeend"
-    hx-target="#movie-container">
-
-    </div>
+{% endfor %} {% if has_next %}
+<div
+  id="scroll-trigger"
+  hx-get="{% url 'landing_page' %}?catagory={{catagory}}&search={{search_query}}&page={{next_page}}"
+  hx-trigger="revealed"
+  hx-swap="beforeend"
+  hx-target="#movie-container"> </div>
 {% endif %}

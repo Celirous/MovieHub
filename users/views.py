@@ -3,8 +3,10 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import FormView
 from .forms import RegisterUserForm, CreateListForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate
-from .models import UserList
+from django.contrib.auth import authenticate, login
+from .models import UserList, ListItem
+from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponseForbidden
 
 
 
@@ -24,7 +26,7 @@ class RegisterUser(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
+        login(self.request,user)
         return super().form_valid(form)
     
 @login_required
@@ -33,7 +35,7 @@ def profile(request):
     user_lists = UserList.objects.filter(user=user)
     return render(request, 'users/accounts/profile.html', {'user':user, 'user_lists':user_lists})
 
-
+@login_required
 def create_list(request):
     user = request.user
     if request.method == "POST":
@@ -52,3 +54,28 @@ def create_list(request):
 
     form = CreateListForm()
     return render (request, 'users/lists/partials/_create_list_form.html', {'form':form})
+
+
+@login_required
+def delete_list(request, list_id):
+    user_list = get_object_or_404(UserList, id=list_id, user=request.user)
+    if request.method == "POST":
+        user_list.delete()
+
+        user_lists = UserList.objects.filter(user=request.user)
+        return render(request, 'users/lists/partials/_user_lists.html', {'user_lists':user_lists})
+    
+    return HttpResponseForbidden
+
+@login_required
+def add_to_list(request, movie_id, movie_name, list_id):
+    user_list = get_object_or_404(UserList, id=list_id, user=request.user)
+
+    if ListItem.objects.filter(movie_id=movie_id, list=user_list).exists():
+        message = f"{movie_name} already in {user_list}."
+        status = "danger"
+    else:
+        ListItem.objects.create(movie_id=movie_id, movie_name=movie_name, list=user_list)
+        message = f"{movie_name} added to {user_list}."
+        status = "success"
+    return render (request, 'users/toasts/_confirmation_toast.html', {'message':message, 'status':status})

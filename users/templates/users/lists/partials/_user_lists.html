@@ -3,10 +3,9 @@
 
   <li class="list-group-item d-flex justify-content-between align-items-center">
     <a href="#">{{list.name}}</a>
-
-    <button class="btn btn-sm">❌</button>
+      <button type='submit' class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#delete-list-modal-{{list.id}}">❌</button>
   </li>
-
+  {% include "users/modals/_list_delete_confirm.html" %}
   {% endfor %}
 </ul>
 

@@ -8,6 +8,8 @@
 
         <form method="post">
 
+          {% csrf_token %}
+
           {% for field in form %}
 
           <div class="mb-3">
