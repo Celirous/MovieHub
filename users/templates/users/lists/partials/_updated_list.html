@@ -1,0 +1,45 @@
+<h5> This is your {{user_list.name}} list </h5>
+
+{% if movies %}
+
+    {% for movie in movies %}
+        <div class="col-md">
+        <div class="card my-2 text-decoration-none" style="width: 18rem 
+                                                    border: 1px solid transparent; 
+                                                    box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+                                                    background-color: #2c2c2c;
+                                                    box-sizing: border-box;" style="width: 18rem">
+                {% if is_owner %}
+                <button class='position-absolute end-0 top-0 btn m-1'
+                data-bs-toggle="modal" data-bs-target="#delete-movie-modal-{{movie.id}}">❌</button>
+                {% endif %}
+            <a href="{% url 'movie_detail' movie.id %}"
+            class="text-decoration-none">
+            <img
+                class="card-img-top"
+                src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{% else %}https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg{% endif %}"
+                alt="{{movie.title}}"
+            />
+            <div class="card-body bg-dark text-decoration-none text-white">
+                <h5 class="card-title">{{movie.title}}</h5>
+                <p class="card-text">
+                {{movie.vote_average|floatformat:2}}/10 Voted: {{movie.vote_count}}
+                </p>
+            </div>
+            </a>
+        </div>
+        </div>
+
+        {% if is_owner %}
+        {% include "users/modals/_movie_delete_confirm.html" %}
+        {% endif %}
+    {% endfor %} 
+{% else %}
+
+<div class='m-3'>
+    <h3> This list is empty </h3>
+
+    <a class="btn btn-success w-10" href="/">Find new Movies to add</a>
+</div>
+
+{% endif %}

@@ -7,13 +7,18 @@ from django.contrib.auth import authenticate, login
 from .models import UserList, ListItem
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponseForbidden
+import requests
+from django.conf import settings
+from django.urls import reverse_lazy
 
 
-
+API_KEY = settings.TMBD_API_KEY
 
 class Login(LoginView):
     template_name = "users/accounts/login.html"
-    next_page = '/'
+    
+    def get_success_url(self):
+        return reverse_lazy("profile")
 
 class Logout(LogoutView):
     next_page = '/'
@@ -72,10 +77,48 @@ def add_to_list(request, movie_id, movie_name, list_id):
     user_list = get_object_or_404(UserList, id=list_id, user=request.user)
 
     if ListItem.objects.filter(movie_id=movie_id, list=user_list).exists():
-        message = f"{movie_name} already in {user_list}."
+        message = f"{movie_name} already in "
         status = "danger"
     else:
         ListItem.objects.create(movie_id=movie_id, movie_name=movie_name, list=user_list)
-        message = f"{movie_name} added to {user_list}."
+        message = f"{movie_name} added to "
         status = "success"
-    return render (request, 'users/toasts/_confirmation_toast.html', {'message':message, 'status':status})
+    return render (request, 'users/toasts/_confirmation_toast.html', {'message':message, 'status':status, "user_list":user_list})
+
+@login_required
+def list_detail(request, list_id):
+    user_list = get_object_or_404(UserList, id=list_id, user=request.user)
+    list_items = ListItem.objects.filter(list=user_list)
+    base_url = "https://api.themoviedb.org/3/movie/"
+    
+    movies =[]
+    for item in list_items:
+        movie_id = item.movie_id
+        url = f"{base_url}{movie_id}?api_key={API_KEY}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            movie = response.json()
+            movies.append(movie)
+
+    return render(request, "users/lists/user_list_detail.html", {"movies":movies, "user_list":user_list,
+                                                           "is_owner":request.user.is_authenticated and request.user == user_list.user})
+
+@login_required
+def delete_movie(request, movie_id, list_id):
+    user_list = get_object_or_404(UserList, id=list_id, user=request.user)
+    movie = get_object_or_404(ListItem, movie_id=movie_id,list=user_list)
+    if request.method == "POST":
+        movie.delete()
+        list_items = ListItem.objects.filter(list=user_list)
+        base_url = "https://api.themoviedb.org/3/movie/"
+        movies =[]
+        for item in list_items:
+            movie_id = item.movie_id
+            url = f"{base_url}{movie_id}?api_key={API_KEY}"
+            response = requests.get(url)
+            if response.status_code == 200:
+                movie = response.json()
+                movies.append(movie)
+        return render(request, 'users/lists/partials/_updated_list.html', {"movies":movies, "user_list":user_list,
+                                                           "is_owner":request.user.is_authenticated and request.user == user_list.user})
+    return HttpResponseForbidden

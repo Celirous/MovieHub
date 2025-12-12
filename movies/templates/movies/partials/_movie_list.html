@@ -2,30 +2,77 @@
 
 <p>{{error_message}}</p>
 
-{% endif %} {% for movie in movies %}
+{% endif %} 
+
+{% for movie in movies %}
 <div class="col-md">
-  <div class="card my-2 text-decoration-none" style="width: 18rem">
-    <a href="{% url 'movie_detail' movie.id %}"
-      class="text-decoration-none">
+  <div class="card my-2 text-decoration-none" style="width: 18rem 
+                                                    border: 1px solid transparent; 
+                                                    box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+                                                    background-color: #2c2c2c;
+                                                    box-sizing: border-box;">
+    <a href="{% url 'movie_detail' movie.id %}" class="text-decoration-none">
       <img
         class="card-img-top"
         src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{movie.poster_path}}{% else %}https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg{% endif %}"
         alt="{{movie.title}}"
       />
-      <div class="card-body text-decoration-none text-black">
+      <div class="card-body bg-dark text-decoration-none text-white">
         <h5 class="card-title">{{movie.title}}</h5>
         <p class="card-text">
           {{movie.vote_average|floatformat:2}}/10 Voted: {{movie.vote_count}}
         </p>
+        
+        {% if user.is_authenticated %}
+          {% if user_lists %}
+            <div class="dropdown">
+              <button 
+              class="btn btn-success dropdown-toggle ms-1" 
+              type="button" 
+              data-bs-toggle="dropdown" 
+              aria-expanded="false"> 
+              Add to list</button>
+
+                <ul class="dropdown-menu">
+                  {% for list in user_lists %}
+                    <li>
+                      <form 
+                      hx-post="{% url 'add_to_list' list_id=list.id movie_id=movie.id movie_name=movie.title %}"
+                      hx-trigger="click"
+                      hx-target="#toast-container"
+                      hx-swap = "beforeend">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">{{list.name}}</button>
+                      </form>
+                    </li>
+                  {% endfor %}
+
+                  <form method='get' action="{% url 'profile' %}">
+                    <button 
+                      class="btn btn-sm mb-3">
+                      ➕ Add More
+                    </button>
+                  </form>
+                </ul>
+              </div>
+          {% else %}
+            <p>You do not have any lists. <a href="{% url 'profile' %}">Create a list!</a></p>
+
+          {% endif %}
+        {% endif %}
+
       </div>
     </a>
   </div>
 </div>
-{% endfor %} {% if has_next %}
+{% endfor %} 
+
+{% if has_next %}
 <div
   id="scroll-trigger"
   hx-get="{% url 'landing_page' %}?catagory={{catagory}}&search={{search_query}}&page={{next_page}}"
   hx-trigger="revealed"
   hx-swap="beforeend"
-  hx-target="#movie-container"> </div>
+  hx-target="#movie-container"
+></div>
 {% endif %}

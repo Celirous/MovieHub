@@ -3,8 +3,8 @@
 <div class="container">
   <h1>{{movie.title}}</h1>
 
-  <div class="row">
-    <div class="col-md-4">
+  <div class="row" >
+    <div class="col-md-4 text-white">
       <img
         class="img-fluid"
         src="{% if movie.poster_path %}https://image.tmdb.org/t/p/original/{{ movie.poster_path }}{% else %}https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg{% endif %}"
@@ -21,10 +21,9 @@
         <ul class="list-inline" style="padding-left: 0; margin-top: 0.5rem">
           {% for genre in movie.genres %}
           <li class="list-inline-item">
-            {{ genre.name }}{% if not forloop.last %} |{% endif %}
-          </li>
+            {{ genre.name }}{% if not forloop.last %} | {% endif %}</li>
           {% empty %}
-          <p class="text-muted">No Genres Provided</p>
+          <p class="text-white">No Genres Provided</p>
           {% endfor %}
         </ul>
 
@@ -34,10 +33,10 @@
         {% for member in credits.crew %}
         {% if member.job  == "Director"%}
           <li class="list-inline-item">
-            {{ member.name }} | </li>
+            {{ member.name }}{% if not forloop.last %} | {% endif %}</li>
         {% endif %}
         {% empty %}
-          <p class="text-muted">No Director Info Provided</p>
+          <p class="text-white">No Director Info Provided</p>
         {% endfor %}
           </ul>
 
@@ -45,15 +44,15 @@
         <ul class="list-inline" style="padding-left: 0; margin-top: 0.5rem">
           {% for member in credits.cast|slice:":9" %}
           <li class="list-inline-item">
-            {{ member.name}}  | </li>
+            {{ member.name}}{% if not forloop.last %} | {% endif %} </li>
           {% empty %}
-          <p class="text-muted">No Cast Info Provided</p>
+          <p class="text-white">No Cast Info Provided</p>
           {% endfor %}
         </ul>
       </div>
 
       <div class="text-end mt-3" style="max-width: 400px">
-        <span class="text-muted fw-light small">Release date: {{ movie.release_date }}</span>
+        <span class="text-white fw-light small text-shadow">Release date: {{ movie.release_date }}</span>
       </div>
     </div>
   </div>
@@ -87,6 +86,13 @@
                 </li>
 
               {% endfor %}
+
+              <form method='get' action="{% url 'profile' %}">
+                <button 
+                  class="btn btn-sm mb-3">
+                  ➕ Add More
+                </button>
+              </form>
           </ul>
         </div>
       {% else %}
@@ -94,8 +100,16 @@
 
 
       {% endif %}
+
+    {% if movie.title is list.id %}
+    
+    <p> This movie is already in the following: {{list.id}}
+    
+    {% endif %}
   {% endif %}
+
 <div id="toast-container" class="position-fixed bottom-0 end-0 m-4"></div>
 
 {% endblock %}
+
 
