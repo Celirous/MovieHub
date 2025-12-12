@@ -1,0 +1,22 @@
+databases:
+  - name: moviehub
+    plan: free
+    databaseName: moviehub_db
+    user: moviehub_user
+
+services:
+  - type: web
+    plan: free
+    name: moviehub
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'python -m gunicorn movie_spot.asgi:application -k uvicorn.workers.UvicornWorker'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: moviehub
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
