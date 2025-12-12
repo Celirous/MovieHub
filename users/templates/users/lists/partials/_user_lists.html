@@ -15,7 +15,8 @@
                                                     border: 1px solid transparent; 
                                                     box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
                                                     background-color: #2c2c2c;
-                                                    box-sizing: border-box;" style="width: 18rem;">
+                                                    box-sizing: border-box; 
+                                                    width: 18rem;">
       <div class="card-body bg-dark text-decoration-none text-white">
         <a href="{% url "list_detail" list_id=list.id %}" class="card-title text-decoration-none text-success">
         <h5 class="card-title" >{{list.name}}</h5></a>
@@ -28,10 +29,11 @@
 </div>
 
 <button
-  class="btn btn-sm m-4"
+  class="btn btn-sm m-4 text-white"
   hx-get="{% url 'create_list' %}"
   hx-swap="innerHTML"
-  hx-target="#create-form-container">
+  hx-target="#create-form-container"
+  >
   ➕ Add More 
 </button>
 

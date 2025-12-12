@@ -70,7 +70,8 @@
           aria-expanded="false"> 
           Add to list</button>
 
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="background-color:#2c2c2c; border:1px solid transparent;
+           box-shadow:0 4px 8px rgba(0,0,0,0.5);">
         
               {% for list in user_lists %}
                 <li>
@@ -81,7 +82,10 @@
                   hx-swap = "beforeend"
                   >
                     {% csrf_token %}
-                    <button type="submit" class="dropdown-item">{{list.name}}</button>
+                    <button type="submit" class="dropdown-item"
+                    style="background-color:#2c2c2c; color:white;
+                      border:1px solid transparent;">
+                      {{list.name}}</button>
                   </form>
                 </li>
 
@@ -89,7 +93,10 @@
 
               <form method='get' action="{% url 'profile' %}">
                 <button 
-                  class="btn btn-sm mb-3">
+                  class="btn btn-sm mb-3"
+                  style="background-color:#2c2c2c; color:white;
+                    border:1px solid transparent; width:100%;
+                    box-shadow:0 4px 8px rgba(0,0,0,0.5);">
                   ➕ Add More
                 </button>
               </form>

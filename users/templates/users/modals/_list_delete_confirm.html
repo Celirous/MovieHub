@@ -1,11 +1,16 @@
 <div class="modal" tabindex="-1" id="delete-list-modal-{{list.id}}" data-bs-backdrop="false">
-  <div class="modal-dialog shadow-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-          <h5 class="modal-title">Are you sure you want to remove {{list.name}}?</h5>
-        <button type="button" class='btn-close' data-bs-dismiss="modal">
+  <div class="modal-dialog shadow-lg" style="width: 18rem;">
+    <div class="modal-content" style="border: 1px solid transparent; 
+                                       box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+                                       background-color: #2c2c2c;
+                                       color: white;">
+      <div class="modal-header" style="background-color: #2c2c2c; 
+                                       border-bottom: 1px solid #444;
+                                       color: white;">
+        <h5 class="modal-title">Are you sure you want to remove {{list.name}}?</h5>
+        <button type="button" class='btn-close btn-close-white' data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="background-color: #2c2c2c; color: white;">
         <form
         hx-post={% url 'delete_list' list.id %}
         hx-swap="innerHTML"
