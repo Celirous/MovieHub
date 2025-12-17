@@ -122,3 +122,18 @@ def delete_movie(request, movie_id, list_id):
         return render(request, 'users/lists/partials/_updated_list.html', {"movies":movies, "user_list":user_list,
                                                            "is_owner":request.user.is_authenticated and request.user == user_list.user})
     return HttpResponseForbidden
+
+
+@login_required
+def edit_list(request, list_id):
+    user_list = get_object_or_404(UserList, id=list_id, user=request.user)
+    
+    if request.method == "POST":
+        new_name = request.POST.get('name', '').strip()
+        if new_name:
+            user_list.name = new_name
+            user_list.save()
+    
+    # Return the updated list of all user lists
+    user_lists = UserList.objects.filter(user=request.user)
+    return render(request, 'users/lists/partials/_user_lists.html', {'user_lists': user_lists})

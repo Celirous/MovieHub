@@ -21,10 +21,12 @@
         <a href="{% url "list_detail" list_id=list.id %}" class="card-title text-decoration-none text-success">
         <h5 class="card-title" >{{list.name}}</h5></a>
         <h6 class="card-subtitle mb-2 text-muted">This is movies for {{list.name}}
+          <button type='button' class="btn btn-sm position-absolute end-0 bottom-0 m-1" style="margin-right: 2.5rem !important;" data-bs-toggle="modal" data-bs-target="#edit-list-modal-{{list.id}}">✏️</button>
           <button type='submit' class="btn btn-sm position-absolute end-0 bottom-0 btn m-1" data-bs-toggle="modal" data-bs-target="#delete-list-modal-{{list.id}}">❌</button></h6>
       </div>
     </div>
     {% include "users/modals/_list_delete_confirm.html" %}
+    {% include "users/modals/_list_edit.html" %}
   {% endfor %}
 </div>
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Login, RegisterUser, Logout, profile, create_list, delete_list, add_to_list, list_detail, delete_movie
+from .views import Login, RegisterUser, Logout, profile, create_list, delete_list, add_to_list, list_detail, delete_movie, edit_list
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path("lists/<int:list_id>/add/<int:movie_id>/<str:movie_name>", add_to_list, name="add_to_list"),
     path('list/<int:list_id>', list_detail, name="list_detail"),
     path('delete/<int:movie_id>/<int:list_id>', delete_movie, name="delete_movie"),
+    path('edit_list/<int:list_id>/', edit_list, name='edit_list'),
 ]
