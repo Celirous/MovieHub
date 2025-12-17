@@ -25,7 +25,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Always set this
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Secret key
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
